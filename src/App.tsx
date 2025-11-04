@@ -9,6 +9,7 @@ import ProductList from './pages/ProductList'
 import ProductCreate from './pages/ProductCreate'
 import ProductEdit from './pages/ProductEdit'
 import ProtectedRoute from './components/ProtectedRoute'
+import Landing from './pages/Landing'
 
 function App() {
   const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated)
@@ -33,10 +34,13 @@ function App() {
     >
       <BrowserRouter>
         <Routes>
+          {/* Public landing page at root */}
+          <Route path="/" element={<Landing />} />
           <Route
             path="/login"
             element={isAuthenticated ? <Navigate to="/products" replace /> : <Login />}
           />
+          {/* Protected app routes under the same base for existing paths */}
           <Route
             path="/"
             element={
@@ -45,12 +49,11 @@ function App() {
               </ProtectedRoute>
             }
           >
-            <Route index element={<Navigate to="/products" replace />} />
             <Route path="products" element={<ProductList />} />
             <Route path="products/create" element={<ProductCreate />} />
             <Route path="products/edit/:id" element={<ProductEdit />} />
           </Route>
-          <Route path="*" element={<Navigate to="/products" replace />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
         {showSplash && <WelcomeSplash onDone={() => setShowSplash(false)} />}
       </BrowserRouter>

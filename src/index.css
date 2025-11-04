@@ -518,6 +518,35 @@
   scrollbar-color: #8a9a5b #f3f5ef;
 }
 
+/* Feature carousel */
+.feature-carousel { position: relative; overflow: hidden; }
+.feature-track {
+  display: flex;
+  gap: 18px;
+  width: max-content;
+  will-change: transform;
+  animation: featureScroll 28s linear infinite;
+}
+.feature-carousel:hover .feature-track { animation-play-state: paused; }
+.feature-fade-left, .feature-fade-right {
+  position: absolute; top: 0; bottom: 0; width: 80px; pointer-events: none;
+}
+.feature-fade-left { left: 0; background: linear-gradient(90deg, #ffffff 0%, rgba(255,255,255,0) 100%); }
+.feature-fade-right { right: 0; background: linear-gradient(270deg, #ffffff 0%, rgba(255,255,255,0) 100%); }
+
+@keyframes featureScroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* Landing scroll animations */
+[data-animate] { opacity: 0; transform: translateY(14px); transition: opacity 600ms ease, transform 600ms ease; }
+.fade-up.reveal { opacity: 1; transform: translateY(0); }
+.fade-left { transform: translateX(14px); }
+.fade-left.reveal { opacity: 1; transform: translateX(0); }
+.fade-right { transform: translateX(-14px); }
+.fade-right.reveal { opacity: 1; transform: translateX(0); }
+
 /* Login page focus styles in theme */
 .login-page .ant-input,
 .login-page .ant-input-affix-wrapper,
