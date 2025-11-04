@@ -10,14 +10,6 @@ A clean, production-ready React app scaffolded with Vite and TypeScript. It impl
 - **Ant Design** for UI components
 - **ESLint** with TypeScript rules
 
-### Recently added features
-- **Split login page** with left illustration and right card; demo creds shown on hover via info icon.
-- **Auth persistence**: `localStorage`-backed `auth` slice to keep users logged in across refreshes.
-- **First-time splash on login (every login)**: animated welcome overlay with FNP branding that fades smoothly.
-- **Sleek themed scrollbars** and olive-tinted focus/hover states across inputs and buttons.
-- **Product list polish**: soft container, refined button hover, fixed pagination (10 items, selector removed).
-- **Filters modal**: filter by State, Category, Shipping Type.
-- **Bulk upload**: CSV import with validation; adds products directly to the Redux store.
 
 ---
 
