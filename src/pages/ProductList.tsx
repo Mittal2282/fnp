@@ -21,7 +21,6 @@ const ProductList = () => {
     'Search by product name...',
     'Search by CID...',
     'Search by category...',
-    'Search components...',
   ]
 
   useEffect(() => {
