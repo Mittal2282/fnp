@@ -73,10 +73,10 @@ const Landing = () => {
             padding: '0 16px',
           }}
         >
-          <h1 style={{ fontSize: 48, lineHeight: 1.1, margin: 0, fontWeight: 800 }}>
+          <h1 className="hero-title" style={{ fontSize: 48, lineHeight: 1.1, margin: 0, fontWeight: 800 }}>
             FNP Products Management Software
           </h1>
-          <p style={{ fontSize: 18, opacity: 0.95, marginTop: 12, maxWidth: 760, marginInline: 'auto' }}>
+          <p className="hero-sub" style={{ fontSize: 18, opacity: 0.95, marginTop: 12, maxWidth: 760, marginInline: 'auto' }}>
             Powering the gifting lifecycle from catalog to checkout. Curate, control, and scale
             your assortment across cakes, flowers, personalized gifts and more.
           </p>
@@ -111,7 +111,7 @@ const Landing = () => {
               boxShadow: '0 10px 30px rgba(0,0,0,0.04)'
             }}
           >
-            <div className="grid" style={{ display: 'grid', gap: 24, gridTemplateColumns: '1.15fr 1fr', alignItems: 'center' }}>
+            <div className="grid about-grid" style={{ display: 'grid', gap: 24, alignItems: 'center' }}>
               <div data-animate className="fade-right">
                 <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '6px 10px', background: '#f3f7ec', color: '#2f3b14', borderRadius: 999, fontSize: 12, border: '1px solid #e1ead0' }}>
                   Thoughtfully built for gifting ops
@@ -152,6 +152,7 @@ const Landing = () => {
               <div data-animate className="fade-left">
                 <img
                   alt="Gifting assortment"
+                  className="about-image"
                   style={{ width: '100%', height: 320, objectFit: 'cover', borderRadius: 14, boxShadow: '0 8px 24px rgba(0,0,0,0.06)', border: '1px solid #eef1e6' }}
                   src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?q=80&w=2068&auto=format&fit=crop"
                 />
@@ -214,7 +215,7 @@ const Landing = () => {
                     maxWidth: 320,
                   }}
                 >
-                  <h3 style={{ margin: 0, color: '#2f3b14', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{f.title}</h3>
+                  <h3 className="feature-card-title" style={{ margin: 0, color: '#2f3b14', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{f.title}</h3>
                   <p style={{ marginTop: 8, color: '#5a5a5a' }}>{f.desc}</p>
                 </div>
               ))}
@@ -226,7 +227,7 @@ const Landing = () => {
       {/* Footer */}
       <footer style={{ background: '#1e2611', padding: '48px 16px 20px', color: '#cdd6bf', marginTop: 24 }}>
         <div className="container" style={{ maxWidth: 1160, margin: '0 auto' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: '1.2fr repeat(3, 1fr)', gap: 20 }}>
+          <div className="footer-grid" style={{ display: 'grid', gap: 20 }}>
             <div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                 <img src={fnpLogo} alt="FNP" style={{ height: 28, width: 'auto', filter: 'grayscale(0) brightness(1.1)' }} />
