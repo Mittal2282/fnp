@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Button, Input, Space, message, Modal, Select, Upload } from 'antd'
+import { Button, Input, Space, message, Modal, Select, Upload, Tag, Typography, Divider } from 'antd'
 import type { UploadProps } from 'antd'
 import { SearchOutlined } from '@ant-design/icons'
 import { useNavigate } from 'react-router-dom'
@@ -15,6 +15,7 @@ const ProductList = () => {
   const [isFilterOpen, setIsFilterOpen] = useState(false)
   const [isBulkOpen, setIsBulkOpen] = useState(false)
   const [filters, setFilters] = useState<{ state?: string; category?: string; shippingType?: string }>({})
+  const [pendingFilters, setPendingFilters] = useState<{ state?: string; category?: string; shippingType?: string }>({})
   const products = useAppSelector((state) => state.product.products)
 
   const placeholderTexts = [
@@ -85,6 +86,7 @@ const ProductList = () => {
   }
 
   const handleAddFilter = () => {
+    setPendingFilters(filters)
     setIsFilterOpen(true)
   }
 
@@ -164,6 +166,33 @@ const ProductList = () => {
     },
   }
 
+  const handleDownloadTemplate = () => {
+    const headers = [
+      'name',
+      'price',
+      'category',
+      'subcategory',
+      'description',
+      'shippingType',
+      'state',
+      'imageUrl',
+      'finalPrice',
+      'cid',
+    ]
+    const csv = headers.join(',') + '\n'
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' })
+    const url = URL.createObjectURL(blob)
+    const link = document.createElement('a')
+    link.href = url
+    link.setAttribute('download', 'product_bulk_template.csv')
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+    URL.revokeObjectURL(url)
+  }
+
+  const appliedFilterCount = ['state', 'category', 'shippingType'].filter((k) => (filters as any)[k]).length
+
   return (
     <div
       className="products-page"
@@ -240,9 +269,15 @@ const ProductList = () => {
               padding: '8px 16px',
               fontWeight: 600,
               boxShadow: '0 1px 3px rgba(0,0,0,0.08)',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 8,
             }}
           >
-            Add Filter
+            <span>Add Filter</span>
+            {appliedFilterCount > 0 && (
+              <Tag color="#6f7f3f" style={{ marginLeft: 4, marginRight: 0, color: '#fff' }}>{appliedFilterCount}</Tag>
+            )}
           </Button>
           <Button
             type="primary"
@@ -285,59 +320,168 @@ const ProductList = () => {
         title="Filters"
         open={isFilterOpen}
         onCancel={() => setIsFilterOpen(false)}
-        onOk={() => setIsFilterOpen(false)}
+        centered
+        width={420}
+        footer={[
+          <Button key="reset" onClick={() => setPendingFilters({})}>
+            Reset
+          </Button>,
+          <Button
+            key="apply"
+            type="primary"
+            onClick={() => {
+              setFilters(pendingFilters)
+              setIsFilterOpen(false)
+            }}
+            style={{ backgroundColor: '#6f7f3f', borderColor: '#6f7f3f' }}
+          >
+            Apply Filters
+          </Button>,
+        ]}
       >
+        <div style={{ color: '#4b5563' }}>
         <Space direction="vertical" style={{ width: '100%' }} size="middle">
-          <Select
-            allowClear
-            placeholder="State"
-            options={[
-              { label: 'PUBLISHED', value: 'PUBLISHED' },
-              { label: 'PUBLISH_FAILED', value: 'PUBLISH_FAILED' },
-              { label: 'DRAFT', value: 'DRAFT' },
-            ]}
-            value={filters.state}
-            onChange={(v) => setFilters((f) => ({ ...f, state: v }))}
-          />
-          <Select
-            allowClear
-            placeholder="Category"
-            options={[
-              { label: 'CAKE', value: 'CAKE' },
-              { label: 'APPARELS', value: 'APPARELS' },
-              { label: 'ACCESSORIES', value: 'ACCESSORIES' },
-            ]}
-            value={filters.category}
-            onChange={(v) => setFilters((f) => ({ ...f, category: v }))}
-          />
-          <Select
-            allowClear
-            placeholder="Shipping Type"
-            options={[
-              { label: 'COURIER', value: 'COURIER' },
-              { label: 'EXPRESS', value: 'EXPRESS' },
-            ]}
-            value={filters.shippingType}
-            onChange={(v) => setFilters((f) => ({ ...f, shippingType: v }))}
-          />
+          {(pendingFilters.state || pendingFilters.category || pendingFilters.shippingType) ? (
+            <Space wrap size={[6, 6]}>
+              {pendingFilters.state && (
+                <Tag
+                  closable
+                  color="green"
+                  onClose={(e) => {
+                    e.preventDefault()
+                    setPendingFilters((f) => ({ ...f, state: undefined }))
+                  }}
+                >
+                  State: {pendingFilters.state}
+                </Tag>
+              )}
+              {pendingFilters.category && (
+                <Tag
+                  closable
+                  color="geekblue"
+                  onClose={(e) => {
+                    e.preventDefault()
+                    setPendingFilters((f) => ({ ...f, category: undefined }))
+                  }}
+                >
+                  Category: {pendingFilters.category}
+                </Tag>
+              )}
+              {pendingFilters.shippingType && (
+                <Tag
+                  closable
+                  color="purple"
+                  onClose={(e) => {
+                    e.preventDefault()
+                    setPendingFilters((f) => ({ ...f, shippingType: undefined }))
+                  }}
+                >
+                  Shipping: {pendingFilters.shippingType}
+                </Tag>
+              )}
+            </Space>
+          ) : (
+            <div style={{ fontSize: 12, color: '#6b7280' }}>Choose one or more filters</div>
+          )}
+
           <div>
-            <Button onClick={() => setFilters({})}>Clear</Button>
+            <div style={{ fontSize: 12, color: '#6b7280', marginBottom: 6 }}>State</div>
+            <Select
+              showSearch
+              allowClear
+              placeholder="Select state"
+              optionFilterProp="label"
+              style={{ width: '100%' }}
+              options={[
+                { label: 'PUBLISHED', value: 'PUBLISHED' },
+                { label: 'PUBLISH_FAILED', value: 'PUBLISH_FAILED' },
+                { label: 'DRAFT', value: 'DRAFT' },
+              ]}
+              value={pendingFilters.state}
+              onChange={(v) => setPendingFilters((f) => ({ ...f, state: v }))}
+            />
+          </div>
+
+          <div>
+            <div style={{ fontSize: 12, color: '#6b7280', marginBottom: 6 }}>Category</div>
+            <Select
+              showSearch
+              allowClear
+              placeholder="Select category"
+              optionFilterProp="label"
+              style={{ width: '100%' }}
+              options={[
+                { label: 'CAKE', value: 'CAKE' },
+                { label: 'APPARELS', value: 'APPARELS' },
+                { label: 'ACCESSORIES', value: 'ACCESSORIES' },
+              ]}
+              value={pendingFilters.category}
+              onChange={(v) => setPendingFilters((f) => ({ ...f, category: v }))}
+            />
+          </div>
+
+          <div>
+            <div style={{ fontSize: 12, color: '#6b7280', marginBottom: 6 }}>Shipping Type</div>
+            <Select
+              showSearch
+              allowClear
+              placeholder="Select shipping type"
+              optionFilterProp="label"
+              style={{ width: '100%' }}
+              options={[
+                { label: 'COURIER', value: 'COURIER' },
+                { label: 'EXPRESS', value: 'EXPRESS' },
+              ]}
+              value={pendingFilters.shippingType}
+              onChange={(v) => setPendingFilters((f) => ({ ...f, shippingType: v }))}
+            />
           </div>
         </Space>
+        </div>
       </Modal>
 
       <Modal
         title="Bulk Upload (CSV)"
         open={isBulkOpen}
         onCancel={() => setIsBulkOpen(false)}
+        centered
+        width={520}
         footer={null}
       >
-        <p style={{ marginBottom: 8 }}>Upload a CSV with headers at least: name, price, category.</p>
-        <Upload.Dragger {...uploadProps} maxCount={1}>
-          <p className="ant-upload-drag-icon">📄</p>
-          <p className="ant-upload-text">Click or drag CSV to this area to upload</p>
-          <p className="ant-upload-hint">Optional headers: subcategory, description, shippingType, state, imageUrl, finalPrice, cid</p>
-        </Upload.Dragger>
+        <div style={{ color: '#4b5563' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 8, marginBottom: 12 }}>
+            <Typography.Text type="secondary" style={{ margin: 0 }}>
+              Include at least <b>name</b>, <b>price</b>, <b>category</b> columns.
+            </Typography.Text>
+            <Button size="small" onClick={handleDownloadTemplate} style={{ borderRadius: 6 }}>Download template</Button>
+          </div>
+
+          <Upload.Dragger
+            {...uploadProps}
+            maxCount={1}
+            showUploadList={false}
+            style={{
+              borderColor: '#e5e7eb',
+              background: '#fafafa',
+              borderRadius: 10,
+              padding: 16,
+            }}
+          >
+            <div style={{ fontSize: 28, lineHeight: 1, marginBottom: 8 }}>📄</div>
+            <div style={{ fontWeight: 600, color: '#374151' }}>Click or drag CSV to upload</div>
+            <div style={{ fontSize: 12, color: '#6b7280', marginTop: 4 }}>Only .csv files are accepted</div>
+          </Upload.Dragger>
+
+          <Divider style={{ margin: '12px 0' }} />
+          <Space direction="vertical" size={6} style={{ width: '100%' }}>
+            <Typography.Text type="secondary" style={{ fontSize: 12 }}>
+              Optional columns: <b>subcategory</b>, <b>description</b>, <b>shippingType</b>, <b>state</b>, <b>imageUrl</b>, <b>finalPrice</b>, <b>cid</b>
+            </Typography.Text>
+            <Typography.Text type="secondary" style={{ fontSize: 12 }}>
+              Values for <b>shippingType</b> and <b>state</b> should match the expected options.
+            </Typography.Text>
+          </Space>
+        </div>
       </Modal>
     </div>
   )

@@ -46,7 +46,7 @@ const Login = () => {
         className="login-illustration"
         style={{
           backgroundImage:
-            "url('https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=1600&auto=format&fit=crop')",
+            "url('https://images.unsplash.com/photo-1557471311-da136cd4fb86?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NTV8fGdpZnR8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&q=60&w=600')",
         }}
       >
         <div className="login-illustration-overlay">
