@@ -9,15 +9,20 @@ const { Text } = Typography
 
 interface ProductTableProps {
   searchQuery?: string
+  filters?: {
+    state?: string
+    category?: string
+    shippingType?: string
+  }
   onEdit?: (product: Product) => void
 }
 
-const ProductTable = ({ searchQuery = '', onEdit }: ProductTableProps) => {
+const ProductTable = ({ searchQuery = '', filters, onEdit }: ProductTableProps) => {
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
   const allProducts = useAppSelector((state) => state.product.products)
 
-  // Filter products based on search query
+  // Filter products based on search query + optional filters
   const filteredProducts = allProducts.filter((product) => {
     if (!searchQuery) return true
     const query = searchQuery.toLowerCase()
@@ -27,6 +32,14 @@ const ProductTable = ({ searchQuery = '', onEdit }: ProductTableProps) => {
       product.category?.toLowerCase().includes(query) ||
       product.description?.toLowerCase().includes(query)
     )
+  })
+
+  const filteredBySelection = filteredProducts.filter((product) => {
+    if (!filters) return true
+    const matchesState = filters.state ? (product.state || '').toUpperCase() === filters.state : true
+    const matchesCategory = filters.category ? (product.category || '').toUpperCase() === filters.category : true
+    const matchesShipping = filters.shippingType ? (product.shippingType || '').toUpperCase() === filters.shippingType : true
+    return matchesState && matchesCategory && matchesShipping
   })
 
   const handleDelete = (id: string) => {
@@ -228,12 +241,12 @@ const ProductTable = ({ searchQuery = '', onEdit }: ProductTableProps) => {
     <div>
       <Table
         columns={columns}
-        dataSource={filteredProducts}
+        dataSource={filteredBySelection}
         rowKey="id"
         size="small"
         pagination={{
           pageSize: 10,
-          showSizeChanger: true,
+          showSizeChanger: false,
           showTotal: (total) => `Total ${total} items`,
           size: 'small',
         }}

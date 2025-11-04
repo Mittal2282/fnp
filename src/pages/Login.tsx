@@ -1,12 +1,13 @@
 import { useState } from 'react'
-import { Form, Input, Button, Card, message } from 'antd'
-import { UserOutlined, LockOutlined } from '@ant-design/icons'
+import { Form, Input, Button, Card, message, Tooltip } from 'antd'
+import { UserOutlined, LockOutlined, InfoCircleOutlined } from '@ant-design/icons'
 import { useAppDispatch } from '../store/hooks'
 import { login } from '../store/slices/authSlice'
 import { useNavigate } from 'react-router-dom'
 
 const Login = () => {
   const [loading, setLoading] = useState(false)
+  const [messageApi, contextHolder] = message.useMessage()
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
 
@@ -17,7 +18,7 @@ const Login = () => {
       dispatch(login(values))
       const isAuthenticated = values.username === 'admin' && values.password === 'password123'
       if (isAuthenticated) {
-        message.success({
+        messageApi.success({
           content: 'Login successful!',
           duration: 2,
           style: {
@@ -26,7 +27,7 @@ const Login = () => {
         })
         navigate('/products')
       } else {
-        message.error({
+        messageApi.error({
           content: 'Invalid username or password. Please check your credentials and try again.',
           duration: 3,
           style: {
@@ -39,21 +40,41 @@ const Login = () => {
   }
 
   return (
-    <div
-      style={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        minHeight: '100vh',
-        background: '#f0f2f5',
-        padding: '24px',
-      }}
-    >
-      <Card
+    <div className="login-split login-page">
+      {contextHolder}
+      <div
+        className="login-illustration"
+        style={{
+          backgroundImage:
+            "url('https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=1600&auto=format&fit=crop')",
+        }}
+      >
+        <div className="login-illustration-overlay">
+          <img src="/fnpLogo.png" alt="FNP" className="login-brand" />
+          <div className="login-illustration-caption">
+            Thoughtful gifts, delivered with care.
+          </div>
+        </div>
+      </div>
+      <div className="login-pane">
+        <Card
         title={
           <div style={{ textAlign: 'center', fontSize: '28px', fontWeight: 600, color: '#1a1a1a' }}>
             Login
           </div>
+        }
+        extra={
+          <Tooltip
+            placement="left"
+            title={
+              <div style={{ lineHeight: 1.5 }}>
+                <div><strong>Username:</strong> admin</div>
+                <div><strong>Password:</strong> password123</div>
+              </div>
+            }
+          >
+            <InfoCircleOutlined style={{ color: '#8a9a5b', fontSize: 18 }} />
+          </Tooltip>
         }
         style={{
           width: '100%',
@@ -105,8 +126,6 @@ const Login = () => {
               block
               size="large"
               style={{
-                backgroundColor: '#556b2f',
-                borderColor: '#556b2f',
                 height: '40px',
               }}
             >
@@ -114,29 +133,8 @@ const Login = () => {
             </Button>
           </Form.Item>
         </Form>
-        <div
-          style={{
-            textAlign: 'center',
-            marginTop: '24px',
-            padding: '16px',
-            background: '#fafafa',
-            borderRadius: '6px',
-            border: '1px solid #f0f0f0',
-          }}
-        >
-          <p style={{ margin: 0, color: '#666', fontSize: '13px', fontWeight: 500 }}>
-            Demo credentials:
-          </p>
-          <div style={{ marginTop: '8px', color: '#666', fontSize: '13px' }}>
-            <p style={{ margin: '4px 0' }}>
-              <strong>Username:</strong> admin
-            </p>
-            <p style={{ margin: '4px 0' }}>
-              <strong>Password:</strong> password123
-            </p>
-          </div>
-        </div>
-      </Card>
+        </Card>
+      </div>
     </div>
   )
 }
