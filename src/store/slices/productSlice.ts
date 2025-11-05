@@ -49,7 +49,7 @@ interface ProductState {
   products: Product[]
 }
 
-// Helper function to create date string in the format shown in image
+
 const createDateString = (daysAgo: number, hour: number, minute: number) => {
   const date = new Date()
   date.setDate(date.getDate() - daysAgo)
