@@ -195,10 +195,11 @@ const ProductForm = ({ productId, onSuccess }: ProductFormProps) => {
     >
       {/* 3-column layout like the reference */}
       <div className="form-card grid-3">
-        <Form.Item label={iconLabel('Component Name', AppstoreOutlined)} name="name" rules={[{ required: true, message: 'Please enter component name!' }]}>
+        
+        <Form.Item label={iconLabel('Component Name', TagsOutlined)} name="name" rules={[{ required: true, message: 'Please enter component name!' }]}>
           <Input placeholder="Enter component name" />
         </Form.Item>
-        <Form.Item label={iconLabel('Category', TagsOutlined)} name="category" rules={[{ required: true, message: 'Select category' }]}>
+        <Form.Item label={iconLabel('Category', AppstoreOutlined)} name="category" rules={[{ required: true, message: 'Select category' }]}>
           <Select placeholder="Select Category">
             <Select.Option value="CAKE">CAKE</Select.Option>
             <Select.Option value="APPARELS">APPARELS</Select.Option>
