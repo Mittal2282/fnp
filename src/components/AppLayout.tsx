@@ -72,6 +72,9 @@ const AppLayout = () => {
           bottom: 0,
           zIndex: 1000,
           transition: 'all 0.2s ease',
+          display: 'flex',
+          flexDirection: 'column',
+          overflow: 'hidden',
         }}
         onMouseEnter={() => setHoverOpen(true)}
         onMouseLeave={() => setHoverOpen(false)}
@@ -85,6 +88,7 @@ const AppLayout = () => {
             padding: isOpen ? '0 20px' : '0',
             borderBottom: '1px solid #f0f0f0',
             background: '#fff',
+            flexShrink: 0,
           }}
         >
           {!isOpen ? (
@@ -93,17 +97,54 @@ const AppLayout = () => {
             <img src={fnpLogo} alt="FNP" style={{ height: 28, objectFit: 'contain' }} />
           )}
         </div>
-        <Menu
-          mode="inline"
-          selectedKeys={[location.pathname]}
-          items={menuItems}
-          onClick={handleMenuClick}
+        <div
           style={{
-            border: 'none',
-            background: '#fff',
-            paddingTop: '8px',
+            flex: 1,
+            overflow: 'hidden',
+            display: 'flex',
+            flexDirection: 'column',
+            minHeight: 0,
           }}
-        />
+        >
+          <Menu
+            mode="inline"
+            selectedKeys={[location.pathname]}
+            items={menuItems}
+            onClick={handleMenuClick}
+            style={{
+              border: 'none',
+              background: '#fff',
+              paddingTop: '8px',
+              flex: 1,
+              overflow: 'hidden',
+            }}
+          />
+        </div>
+        <div
+          style={{
+            borderTop: '1px solid #f0f0f0',
+            padding: '8px 0',
+            background: '#fff',
+            flexShrink: 0,
+            position: 'relative',
+          }}
+        >
+          <Menu
+            mode="inline"
+            items={[
+              {
+                key: 'logout',
+                icon: <LogoutOutlined />,
+                label: 'Logout',
+                onClick: handleLogout,
+              },
+            ]}
+            style={{
+              border: 'none',
+              background: '#fff',
+            }}
+          />
+        </div>
       </Sider>
       {/* Overlay when sidebar is open */}
       {isOpen && (
